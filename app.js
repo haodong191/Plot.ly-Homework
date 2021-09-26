@@ -1,4 +1,4 @@
-function buildMeta(sample){
+function sampleMeta(sample){
     d3.json('samples.json').then((data)=>{
         var sample_meta = data.metadata;
         console.log(data)
@@ -11,7 +11,7 @@ function buildMeta(sample){
         });
     });
 }
-function buildCharts(sample) {
+function sampleCharts(sample) {
     d3.json("samples.json").then((data) => {
       var samples = data.samples;
       var resultArray = samples.filter(sampleObj => sampleObj.id == sample);
@@ -25,7 +25,7 @@ function buildCharts(sample) {
         margin: { t: 0 },
         hovermode: "closest",
         xaxis: { title: "OTU ID" },
-        margin: { t: 30}
+        margin: { t: 30, l: 35}
       };
       var bubbleData = [
         {
@@ -36,7 +36,7 @@ function buildCharts(sample) {
           marker: {
             size: sample_values,
             color: otu_ids,
-            colorscale: "Electric"
+            colorscale: "RdBu"
           }
         }
       ];
@@ -52,13 +52,13 @@ function buildCharts(sample) {
         }
       ];
       var barLayout = {
-        title: "Top 10 Bacteria Cultures Found",
-        margin: { t: 30, l: 175 }
+        title: "Bacteria Cultures Found",
+        margin: { t: 30, l: 75 }
       };
       Plotly.newPlot("bar", barData, barLayout);
     });
 }
-function updatePage(){
+function refreshPage(){
     var dropdown=d3.select('#selDataset');
     d3.json('samples.json').then((data)=>{
     var sample_names = data.names;
@@ -66,12 +66,12 @@ function updatePage(){
     dropdown.append('option').text(name).property('value', name);
     });
     var firstSample = sample_names[0];
-    buildCharts(firstSample);
-    buildMeta(firstSample);
+    sampleCharts(firstSample);
+    sampleMeta(firstSample);
     });
 }
 function optionChanged(newSample){
-    buildCharts(newSample);
-    buildMeta(newSample);
+    sampleCharts(newSample);
+    sampleMeta(newSample);
 }
-updatePage();
+refreshPage();
